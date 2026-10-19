@@ -1,0 +1,29 @@
+bundle:
+  name: fleet_pdm
+  uuid: d6e90e61-13ae-44f3-a32b-056ef9d8615a
+
+include:
+  - resources/*.yaml
+
+variables:
+  catalog:
+    description: The catalog to use
+
+sync:
+  exclude:
+    - data/**
+    - scripts/**
+    - tests/**
+
+
+targets:
+  free:
+    # Any job schedules and triggers are paused by default.
+    mode: development
+    default: true
+    workspace:
+      host: https://dbc-979f914b-a9ed.cloud.databricks.com
+      profile: freedev
+
+    variables:
+      catalog: pdm_dev

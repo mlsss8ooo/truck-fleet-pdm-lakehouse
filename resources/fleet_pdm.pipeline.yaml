@@ -1,0 +1,31 @@
+# The main pipeline for fleet_pdm
+
+resources:
+  pipelines:
+    fleet_medallion:
+      name: fleet-medallion-${bundle.target}
+      catalog: ${var.catalog}
+      schema: bronze
+      serverless: true
+      channel: CURRENT
+      continuous: false            
+
+
+      libraries:
+        - glob:
+            include: ../pipelines/fleet_medallion/**
+
+      configuration:
+        pdm.catalog: ${var.catalog}
+        pdm.landing_path: /Volumes/${var.catalog}/landing/raw
+        
+      event_log:                  
+        catalog: ${var.catalog}
+        schema: ops
+        name: fleet_medallion_event_log
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
